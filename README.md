@@ -1,29 +1,10 @@
-# EXPERIMENT--03-INTERFACING-A-SOIL-MOISTURE-SENSOR-AND-CONFIGURING-THE-OUTPUT-THROUGH-USART- USING IOT DEVELOPMENT BOARD 
-## Aim: To Interface a soil moisture sensor , configure  the ADC and transfer the data through serial port usign USART  
+# EXPERIMENT--03-INTERFACING IOT DEVELOPEMENT BOARD AND CONFIGURE THE USART FOR TRANSFERRING STRINGS
+## Aim: To Interface aN iot developement board and to configure usart for transferring strings.
 ## Components required: STM32 CUBE IDE, ARM IOT development board,  STM programmer tool, Serial port utility tool 
 ## Theory 
 The full form of an ARM is an advanced reduced instruction set computer (RISC) machine, and it is a 32-bit processor architecture expanded by ARM holdings. The applications of an ARM processor include several microcontrollers as well as processors. The architecture of an ARM processor was licensed by many corporations for designing ARM processor-based SoC products and CPUs. This allows the corporations to manufacture their products using ARM architecture. Likewise, all main semiconductor companies will make ARM-based SOCs such as Samsung, Atmel, TI etc.
-## Soil moisture sensor 
-The soil moisture sensor is one kind of sensor used to gauge the volumetric content of water within the soil. As the straight gravimetric dimension of soil moisture needs eliminating, drying, as well as sample weighting. These sensors measure the volumetric water content not directly with the help of some other rules of soil like dielectric constant, electrical resistance, otherwise interaction with neutrons, and replacement of the moisture content.
 
-The relation among the calculated property as well as moisture of soil should be adjusted & may change based on ecological factors like temperature, type of soil, otherwise electric conductivity. The microwave emission which is reflected can be influenced by the moisture of soil as well as mainly used in agriculture and remote sensing within hydrology.
-
-![image](https://user-images.githubusercontent.com/36288975/234777393-51ef4e67-bfe4-4aed-b3ca-02fdcb7216f2.png)
-
-
-
-
-  Soil Moisture Sensor Pin Configuration
-The FC-28 soil moisture sensor includes 4-pins as shown below 
-VCC pin is used for power
-A0 pin is an analog output
-D0 pin is a digital output
-GND pin is a Ground
-
-![image](https://user-images.githubusercontent.com/36288975/234777177-7000d50b-e82a-4ba6-ab1e-e8b9e0903f68.png)
-
-
- ## Procedure:
+  ## Procedure:
  1. click on STM 32 CUBE IDE, the following screen will appear 
  ![image](https://user-images.githubusercontent.com/36288975/226189166-ac10578c-c059-40e7-8b80-9f84f64bf088.png)
 
@@ -70,32 +51,23 @@ configure in the usart 2 as asynchronous mode and set the baud rate as 115200 as
 
 
 ## STM 32 CUBE PROGRAM :
+
 ```
 Developed By:Challa Sandeep
 Register No:212221240011
 ```
+
 ```
 #include "main.h"
-#include "Soil Moisture Sensor.h"
-#include "stdio.h"
-UART_HandleTypeDef huart2;
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);
-void ADC_Init(void);
-void GPIO_Init(void);
 #if defined (__ICCARM__) || defined (__ARMCC_VERSION)
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #elif defined(__GNUC__)
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #endif /* __ICCARM__ || __ARMCC_VERSION */
-
-PUTCHAR_PROTOTYPE
-{
-  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
-
-  return ch;
-}
+UART_HandleTypeDef huart2;
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
 
 int main(void)
 {
@@ -104,22 +76,26 @@ int main(void)
   SystemClock_Config();
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  ADC_Init();
-  GPIO_Init();
   while (1)
   {
-	  soil_moisture();
+	  printf("YUVARANI\n");
+	  HAL_Delay(500);
   }
- 
+  
 }
+PUTCHAR_PROTOTYPE
+{
 
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
- 
+  
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
@@ -129,7 +105,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
- 
+  
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK3|RCC_CLOCKTYPE_HCLK
                               |RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1
                               |RCC_CLOCKTYPE_PCLK2;
@@ -148,7 +124,7 @@ void SystemClock_Config(void)
 static void MX_USART2_UART_Init(void)
 {
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
+  huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -174,22 +150,20 @@ static void MX_USART2_UART_Init(void)
   {
     Error_Handler();
   }
-
 }
 
 static void MX_GPIO_Init(void)
 {
-
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
 }
-
 void Error_Handler(void)
 {
   __disable_irq();
   while (1)
   {
   }
+ 
 }
 
 #ifdef  USE_FULL_ASSERT
